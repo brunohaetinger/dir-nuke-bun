@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="logo.png" width="128" alt="Locker Bun Logo" />
+  <img src="logo.png" width="128" alt="Locker Bun Logo" style="border-radius: 25px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 10px;"/>
 </p>
 
 # dir-nuke
@@ -25,4 +25,3 @@ To run the tool and search for `node_modules` in a specific directory (e.g., you
 ```bash
 bun run index.ts /home/youruser
 ```
-
