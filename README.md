@@ -25,3 +25,21 @@ To run the tool and search for `node_modules` in a specific directory (e.g., you
 ```bash
 bun run index.ts /home/youruser
 ```
+
+## Bun Building scripts
+
+On `package.json` there are 2 building scripts:
+
+This will generate a `.js` file, target to be run using `bun`
+> "build": "bun build ./index.tsx --outdir ./build --target bun",
+
+This will generate a `clean-nm` single file, which can be run in the same platform as the compiling machine.
+> "build-standalone": "bun build ./index.tsx --compile --outfile build/clean-nm"
+
+
+#### Files generated at this moment:
+
+| File | Size | Issue |
+| --- | --- | --- |
+| index.js | 1,5M | Can only be run by `bun` runtime |
+| clean-nm | 103M | Too large file |
