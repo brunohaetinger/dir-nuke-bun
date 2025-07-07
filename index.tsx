@@ -4,7 +4,6 @@ import { render, Text, Box } from 'ink';
 import SelectInput from 'ink-select-input';
 import { exec } from 'child_process';
 import fs from 'fs';
-import path from 'path';
 
 const getNodeModulesFolders = (dir: string): Promise<{ label: string; value: string }[]> => {
 	return new Promise((resolve) => {
