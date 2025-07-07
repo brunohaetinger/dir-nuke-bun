@@ -2,28 +2,49 @@
 import React, { useEffect, useState } from 'react';
 import { render, Text, Box } from 'ink';
 import SelectInput from 'ink-select-input';
-import { exec } from 'child_process';
-import fs from 'fs';
-
+import { rm } from "node:fs/promises";
 const getNodeModulesFolders = (dir: string): Promise<{ label: string; value: string }[]> => {
-	return new Promise((resolve) => {
-		exec(
-			`find ${dir} -type d -name node_modules -prune -exec du -sh {} +`,
-			(err, stdout) => {
-				if (err) return resolve([]);
-				const lines = stdout
-					.trim()
-					.split('\n')
-					.map((line) => {
-						const [size, folder] = line.split('\t');
-						return {
-							label: `${size} - ${folder || ''}`, // Ensure folder is a string
-							value: folder || '' // Ensure folder is a string
-						};
-					});
-				resolve(lines);
+	return new Promise(async (resolve) => {
+		try {
+			const proc = Bun.spawn([
+				"find",
+				dir,
+				"-type",
+				"d",
+				"-name",
+				"node_modules",
+				"-prune",
+				"-exec",
+				"du",
+				"-sh",
+				"{}",
+				"+"
+			]);
+
+			const stdout = await new Response(proc.stdout).text();
+			const exitCode = await proc.exited;
+
+			if (exitCode !== 0) {
+				const stderr = await new Response(proc.stderr).text();
+				console.error("Error executing find command:", stderr);
+				return resolve([]);
 			}
-		);
+
+			const lines = stdout
+				.trim()
+				.split('\n')
+				.map((line: string) => {
+					const [size, folder] = line.split('\t');
+					return {
+						label: `${size} - ${folder || ''}`,
+						value: folder || ''
+					};
+				});
+			resolve(lines);
+		} catch (error) {
+			console.error("Error in getNodeModulesFolders:", error);
+			resolve([]);
+		}
 	});
 };
 
@@ -66,14 +87,14 @@ const App = ({ dir = '.' }: { dir?: string }) => {
 					...folders,
 					{ label: 'Delete All node_modules folders', value: 'DELETE_ALL' }
 				]}
-				onSelect={(item) => {
+				onSelect={async (item) => {
 					if (item.value === 'DELETE_ALL') {
 						for (const folder of folders) {
-							fs.rmSync(String(folder.value), { recursive: true, force: true });
+							await rm(String(folder.value), { recursive: true, force: true });
 						}
 						setDeleted(folders.map((f) => f.value));
 					} else {
-						fs.rmSync(String(item.value), { recursive: true, force: true });
+						await rm(String(item.value), { recursive: true, force: true });
 						setDeleted((prevDeleted) => [...prevDeleted, String(item.value)]);
 					}
 				}}
