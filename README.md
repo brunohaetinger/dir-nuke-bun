@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="logo.png" width="128" alt="Locker Bun Logo" style="border-radius: 25px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); padding: 10px;"/>
-</p>
-
 # clean-nm-bun
 
 `clean-nm-bun` is a command-line interface (CLI) tool that helps you find and delete `node_modules` folders on your system. It allows you to select specific `node_modules` folders to delete or delete all of them at once, helping you free up disk space.
