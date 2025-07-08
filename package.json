@@ -1,5 +1,5 @@
 {
-  "name": "dir-nuke",
+  "name": "clean-nm-bun",
   "module": "index.tsx",
   "type": "module",
   "private": true,
